@@ -32,6 +32,9 @@ if has_command apt-get; then
     sudo apt update
     cd Desktop && sudo apt install -y brave-browser && cd ~ || echo "couldn't install brave browser"
 
+    # Getting rid of firefox
+    rm -rf ~/.mozilla && rm -rf ~/.cache/mozilla
+
     echo "Installing neovim"
     sudo apt remove -y neovim || echo "no neovim present"
     curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
