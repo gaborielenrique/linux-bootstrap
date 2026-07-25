@@ -85,7 +85,7 @@ if has_command apt-get; then
     #Now on making the random codes folders
     cd Desktop && mkcd "random-codes"
     mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
-    mkcd "python" && python3-venv -m venv random-virtual-environment && echo "source random-virtual-environment/bin/activate" >.envrc && direnv allow && echo "print('wassup')" >randompy.py && cd ~
+    mkcd "python" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ~
 
     echo "Lastly install any drivers that might be missing (this only works for ubuntu, mint, and debian)"
     if has_command ubuntu-drivers; then
