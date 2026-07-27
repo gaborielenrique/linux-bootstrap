@@ -16,9 +16,7 @@ mkcd() {
 # Works with ubuntu based distros
 if has_command apt-get; then
     echo "Update the system"
-    sudo apt update
-    sudo apt upgrade -y
-    sudo apt autoremove -y
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 
     echo "Installing some utilities"
     sudo apt install -y git curl htop build-essential cmake clangd gdb ripgrep fd-find tree tmux zip unzip python3 python3-pip python3-venv direnv
@@ -103,9 +101,31 @@ fi
 
 # Works with Fedora, Nobara, Rocky, and Alma
 if has_command dnf; then
-    echo "Hey, this bitch uses dnf... AYYY YOOO"
+    # Making it so dnf doesn't take ages to update
+    sudo chmod 777 /etc/dnf/dnf.conf
+    if ! grep -q "\[main\]" /etc/dnf/dnf.conf; then
+        echo "[main]" | sudo tee -a /etc/dnf/dnf.conf >/dev/null
+    fi
+    echo -e "fastestmirror=True\nmax_parallel_downloads=10\ndeltarpm=True" >>/etc/dnf/dnf.conf
+    sudo chmod 644 /etc/dnf/dnf.conf
 
+    echo "Update the system"
     sudo dnf upgrade -y && sudo dnf autoremove -y
+
+    echo "Installing some utilities"
+    sudo dnf install -y git curl htop build-essential cmake clangd gdb ripgrep fd-find tree tmux zip unzip python3 python3-pip direnv
+
+    # Hook direnv to terminal
+    grep -qxF 'eval "$(direnv hook bash)"' ~/.bashrc || echo 'eval "$(direnv hook bash)"' >>~/.bashrc
+
+    # Installing brave browser
+    if ! has_command dnf-plugins-core; then
+        sudo dnf install -y 'dnf5-command(config-manager)' dnf-plugins-core
+    fi
+    sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
+    cd Desktop/ && sudo dnf install brave-browser && cd ~ || echo "ERROR couldn't install brave browser" && cd ~
+
+    echo "installing lazyvim"
 fi
 
 # Works with Arch btw, EndeavourOS, CachyOS, and Manjaro
