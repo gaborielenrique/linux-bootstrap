@@ -1,6 +1,8 @@
 #!/bin/bash
 set -euo pipefail
 
+# Going to start putting the repeated code in something like a "non_package_manager_dependent" later
+
 cd ~
 
 # Helper function for checking for package manager
@@ -43,10 +45,6 @@ if has_command apt-get; then
     rm nvim-linux-x86_64.tar.gz || echo "ERROR: Couldn't remove the neovim tarball"
 
     echo "Installing lazyvim"
-    mv ~/.config/nvim{,.bak} || echo "Can't backup nvim configs"
-    mv ~/.local/share/nvim{,.bak} || echo "Can't backup nvim shares"
-    mv ~/.local/state/nvim{,.bak} || echo "Can't backup nvim state"
-    mv ~/.cache/nvim{,.bak} || echo "Can't backup nvim cache"
     git clone https://github.com/LazyVim/starter ~/.config/nvim
     rm -rf ~/.config/nvim/.git
 
@@ -125,7 +123,37 @@ if has_command dnf; then
     sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
     cd Desktop/ && sudo dnf install brave-browser && cd ~ || echo "ERROR couldn't install brave browser" && cd ~
 
+    echo "installing neovim"
+    sudo dnf remove -y neovim || echo "no neovim present"
+    curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    sudo mv /opt/nvim-linux-x86_64 /opt/nvim
+    sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
+    rm nvim-linux-x86_64.tar.gz || echo "ERROR: Couldn't remove the neovim tarball"
+
     echo "installing lazyvim"
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    rm -rf ~/.config/nvim/.git
+
+    echo "getting nerdfont"
+    mkdir -p ~/.local/share/fonts
+    wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+    unzip JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMono
+    fc-cache -fv || echo "ERROR: Couldn't build font cache"
+    rm JetBrainsMono.zip || echo "ERROR: Couldn't remove nerd font zip"
+
+    echo "config git email and username"
+    git config --global user.name "Gabriel Enrique Angulo Gonzalez"
+    git config --global user.email "gaboangulo1@gmail.com"
+
+    #Now on making the random codes folders
+    cd Desktop && mkcd "random-codes"
+    mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
+    mkcd "python" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ~
+
+    # Now one last update
+    sudo dnf update -y && sudo dnf autoremove -y
 fi
 
 # Works with Arch btw, EndeavourOS, CachyOS, and Manjaro
