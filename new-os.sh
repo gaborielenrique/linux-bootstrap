@@ -92,6 +92,9 @@ if has_command apt-get; then
     if has_command ubuntu-drivers; then
         sudo ubuntu-drivers install
     fi
+
+    # One last update just in case
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 fi
 
 # Works with Fedora, Nobara, Rocky, and Alma
@@ -143,6 +146,9 @@ if has_command dnf; then
     # Installing any missing drivers (aka nvidia proprietary drivers)
     sudo dnf install -y kernel-devel kernel-headers
     sudo dnf install -y "https://mirrors.rpmfusion.org/free/$DISTRO/rpmfusion-free-release-$VERSION.noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/$DISTRO/rpmfusion-nonfree-release-$VERSION.noarch.rpm"
+
+    # One last update just in case
+    sudo dnf update -y && sudo dnf autoremove -y
 fi
 
 # Works with Arch btw, EndeavourOS, CachyOS, and Manjaro
@@ -153,4 +159,4 @@ if has_command pacman; then
     # Getting rid of firefox
     sudo pacman -Rns firefox && rm -rf ~/.mozilla/firefox && rm -rf ~/.cache/mozilla
 fi
-echo "DONE! Now here's what you'll do: 1) update your system again 2) restart the terminal 3) start nvim so that layvim can finish installing"
+echo "DONE! Now here's what you'll do: 1) restart the terminal 2) start nvim so that layvim can finish installing"
