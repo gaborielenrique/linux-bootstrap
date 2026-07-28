@@ -13,6 +13,37 @@ mkcd() {
     mkdir -p "$1" && cd "$1"
 }
 
+# Here's the things that work regardless of distro
+uni-distro() {
+    echo "installing neovim"
+    curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+    sudo rm -rf /opt/nvim
+    sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
+    sudo mv /opt/nvim-linux-x86_64 /opt/nvim
+    sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
+    rm nvim-linux-x86_64.tar.gz || echo "ERROR: Couldn't remove the neovim tarball"
+
+    echo "installing lazyvim"
+    git clone https://github.com/LazyVim/starter ~/.config/nvim
+    rm -rf ~/.config/nvim/.git
+
+    echo "getting nerdfont"
+    mkdir -p ~/.local/share/fonts
+    wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
+    unzip JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMono
+    fc-cache -fv || echo "ERROR: Couldn't build font cache"
+    rm JetBrainsMono.zip || echo "ERROR: Couldn't remove nerd font zip"
+
+    echo "config git email and username"
+    git config --global user.name "Gabriel Enrique Angulo Gonzalez"
+    git config --global user.email "gaboangulo1@gmail.com"
+
+    #Now on making the random codes folders
+    cd Desktop && mkcd "random-codes"
+    mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
+    mkcd "python" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ~
+}
+
 # Works with ubuntu based distros
 if has_command apt-get; then
     echo "Update the system"
@@ -55,6 +86,8 @@ if has_command apt-get; then
     sudo apt update
     sudo apt install -y code
 
+    uni-distro
+
     echo "Lastly install any drivers that might be missing (this only works for ubuntu, mint, and debian)"
     if has_command ubuntu-drivers; then
         sudo ubuntu-drivers install
@@ -85,7 +118,7 @@ if has_command dnf; then
         sudo dnf install -y 'dnf5-command(config-manager)' dnf-plugins-core
     fi
     sudo dnf config-manager addrepo --from-repofile=https://brave-browser-rpm-release.s3.brave.com/brave-browser.repo
-    cd Desktop/ && sudo dnf install brave-browser && cd ~ || echo "ERROR couldn't install brave browser" && cd ~
+    cd Desktop/ && sudo dnf install -y brave-browser && cd ~ || echo "ERROR couldn't install brave browser" && cd ~
 
     # Getting rid of firefox
     sudo dnf remove -y firefox && rm -rf ~/.mozilla
@@ -93,7 +126,7 @@ if has_command dnf; then
     echo "installing vscode"
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     sudo sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-    cd Desktop && sudo dnf install code && cd ~
+    cd Desktop && sudo dnf install -y code && cd ~
 
     # Installing Discord
     if [[ -f /etc/os-release ]]; then
@@ -104,6 +137,8 @@ if has_command dnf; then
     sudo dnf install -y "https://mirrors.rpmfusion.org/nonfree/$DISTRO/rpmfusion-nonfree-release-$VERSION.noarch.rpm"
     sudo dnf makecache
     cd Desktop && sudo dnf install -y discord && cd ~
+
+    uni-distro
 
     # Installing any missing drivers (aka nvidia proprietary drivers)
     sudo dnf install -y kernel-devel kernel-headers
@@ -118,34 +153,4 @@ if has_command pacman; then
     # Getting rid of firefox
     sudo pacman -Rns firefox && rm -rf ~/.mozilla/firefox && rm -rf ~/.cache/mozilla
 fi
-
-# This part is what can be done regardless of package manager
-echo "installing neovim"
-curl -LO https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
-sudo rm -rf /opt/nvim
-sudo tar -C /opt -xzf nvim-linux-x86_64.tar.gz
-sudo mv /opt/nvim-linux-x86_64 /opt/nvim
-sudo ln -sf /opt/nvim/bin/nvim /usr/local/bin/nvim
-rm nvim-linux-x86_64.tar.gz || echo "ERROR: Couldn't remove the neovim tarball"
-
-echo "installing lazyvim"
-git clone https://github.com/LazyVim/starter ~/.config/nvim
-rm -rf ~/.config/nvim/.git
-
-echo "getting nerdfont"
-mkdir -p ~/.local/share/fonts
-wget https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip
-unzip JetBrainsMono.zip -d ~/.local/share/fonts/JetBrainsMono
-fc-cache -fv || echo "ERROR: Couldn't build font cache"
-rm JetBrainsMono.zip || echo "ERROR: Couldn't remove nerd font zip"
-
-echo "config git email and username"
-git config --global user.name "Gabriel Enrique Angulo Gonzalez"
-git config --global user.email "gaboangulo1@gmail.com"
-
-#Now on making the random codes folders
-cd Desktop && mkcd "random-codes"
-mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
-mkcd "python" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ~
-
 echo "DONE! Now here's what you'll do: 1) update your system again 2) restart the terminal 3) start nvim so that layvim can finish installing"
