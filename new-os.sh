@@ -111,7 +111,7 @@ if has_command dnf; then
     sudo dnf upgrade -y && sudo dnf autoremove -y
 
     echo "Installing some utilities"
-    sudo dnf install -y git curl htop gcc gcc-c++ make cmake clangd gdb ripgrep fd tree tmux zip unzip python3 python3-pip direnv
+    sudo dnf install -y git curl htop gcc gcc-c++ make cmake clangd gdb tree tmux zip unzip python3 python3-pip
 
     # Hook direnv to terminal
     grep -qxF 'eval "$(direnv hook bash)"' ~/.bashrc || echo 'eval "$(direnv hook bash)"' >>~/.bashrc
