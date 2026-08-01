@@ -62,7 +62,7 @@ cd linux-bootstrap
 
 OR download the zip file if git is unavailable:
 
-unzip linux-bootstrap.zip
+unzip linux-bootstrap-main.zip
 cd linux-bootstrap
 
 Make the scripts executable:
