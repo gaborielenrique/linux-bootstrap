@@ -35,8 +35,11 @@ uni-distro() {
     rm JetBrainsMono.zip || echo "ERROR: Couldn't remove nerd font zip"
 
     echo "config git email and username"
-    git config --global user.name "Gabriel Enrique Angulo Gonzalez"
-    git config --global user.email "gaboangulo1@gmail.com"
+    read -pr "Enter your full name: " FULL_NAME
+    git config --global user.name "$FULL_NAME"
+    read -pr "Enter your email address: " EMAIL
+    git config --global user.email "$EMAIL"
+    ssh-keygen -t ed25519 -C "$EMAIL" && eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
 
     #Now on making the random codes folders
     cd Desktop && mkcd "random-codes"
@@ -158,5 +161,16 @@ if has_command pacman; then
 
     # Getting rid of firefox
     sudo pacman -Rns firefox && rm -rf ~/.mozilla/firefox && rm -rf ~/.cache/mozilla
+
+    uni-distro
+
+    # Installing any missing drivers
+
+    # One last update
+    sudo pacman -Sy && sudo pacman -Syu
 fi
-echo "DONE! Now here's what you'll do: 1) restart the terminal 2) start nvim so that layvim can finish installing"
+
+echo "DONE! Now here's what you'll do: 1)Copy the public ssh key below and paste it wherever you want 2) restart the terminal 3) start nvim so that layvim can finish installing"
+echo "ssh key:"
+cat ~/.ssh/id_ed25519.pub
+echo "If pasting on github, run the following command after pasting: ssh -T git@github.com, then enter: yes"
