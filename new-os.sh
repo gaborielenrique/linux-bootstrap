@@ -44,7 +44,8 @@ uni-distro() {
     #Now on making the random codes folders
     cd Desktop && mkcd "random-codes"
     mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
-    mkcd "python" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ~
+    mkcd "python" && mkcd "script" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ..
+    mkcd "notebook" && python3 -m venv random-notebook-virtual-environment && echo "source ./random-notebook-virtual-environment/bin/activate" >.envrc && touch random-notebook.ipynb && cd ~
 }
 
 # Works with ubuntu based distros
