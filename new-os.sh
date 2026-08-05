@@ -35,9 +35,9 @@ uni-distro() {
     rm JetBrainsMono.zip || echo "ERROR: Couldn't remove nerd font zip"
 
     echo "config git email and username"
-    read -p -t 30 "Enter your full name: " FULL_NAME
+    read -p "Enter your full name: " -t 30 FULL_NAME
     git config --global user.name "$FULL_NAME"
-    read -p -t 30 "Enter your email address: " EMAIL
+    read -p "Enter your email address: " -t 30 EMAIL
     git config --global user.email "$EMAIL"
     ssh-keygen -t ed25519 -C "$EMAIL" && eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
 
