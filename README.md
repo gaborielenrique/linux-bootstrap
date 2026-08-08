@@ -51,16 +51,11 @@ A lightweight maintenance script that:
 - Runs a system upgrade only when necessary
 - Removes unused packages
 
-Currently this script supports Debian/Ubuntu-based distributions.
+Currently this script supports distributions that have either apt or dnf.
 
 Usage
 
-Clone the repository:
-
-git clone https://github.com/<your-username>/linux-bootstrap.git
-cd linux-bootstrap
-
-OR download the zip file if git is unavailable:
+download the zip file, and then unzip it:
 
 unzip linux-bootstrap-main.zip
 cd linux-bootstrap
@@ -78,8 +73,6 @@ The update script is intended to be executed automatically (for example through 
 Future Improvements
 
 - Complete Arch Linux support
-- Cross-platform automatic updates
-- Automatic installation of the update scheduler
 - Better modularization of package installation
 - User-selectable software profiles
 - Optional desktop environments
