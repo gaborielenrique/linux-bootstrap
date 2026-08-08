@@ -46,6 +46,30 @@ uni-distro() {
     mkcd "c++" && echo "#include<iostream>" >random_cplus.cpp && cd ..
     mkcd "python" && mkcd "script" && python3 -m venv random-virtual-environment && echo "source ./random-virtual-environment/bin/activate" >.envrc && echo "print('wassup')" >randompy.py && cd ..
     mkcd "notebook" && python3 -m venv random-notebook-virtual-environment && echo "source ./random-notebook-virtual-environment/bin/activate" >.envrc && touch random-notebook.ipynb && cd ~
+
+    echo "Setting up auto-updates"
+    UPDATE_PATH="$HOME/Downloads/linux-bootstrap-main/auto-update.sh"
+    sudo tee /etc/systemd/system/auto-update.service >/dev/null <<EOF
+    [Unit]
+    Description=Daily automatic package updates
+
+    [Service]
+    Type=oneshot
+    ExecStart=$UPDATE_PATH
+EOF
+    sudo tee /etc/systemd/system/auto-update.timer >/dev/null <<EOF
+    [Unit]
+    Description=Automatic update of packages daily
+
+    [Timer]
+    OnCalendar=daily
+    Persistent=true
+    RandomizedDelaySec=30m
+
+    [Install]
+    WantedBy=timers.target
+EOF
+    sudo systemctl daemon-reload && sudo systemctl enable --now auto-update.timer
 }
 
 # Works with ubuntu based distros
