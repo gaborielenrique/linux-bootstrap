@@ -8,13 +8,8 @@ if has_command apt-get; then
     echo "Updating package list"
     apt-get update -qq
     echo "Checking for updates"
-    if apt-get -s dist-upgrade | grep -q "^Inst "; then
-        echo "Updates available. Installing"
-        apt-get dist-upgrade -y && apt-get autoremove -y
-        echo "Update complete"
-    else
-        echo "No updates available"
-    fi
+    apt-get upgrade -y && apt-get autoremove -y
+    echo "Update complete"
 fi
 if has_command dnf; then
     echo "Updating package list"
