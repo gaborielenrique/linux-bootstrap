@@ -23,6 +23,9 @@ if has_command dnf; then
     fi
 fi
 if has_command pacman; then
-    echo "I haven't done this part yet... Don't know what to tell you :("
+    echo "Updating..."
+    pacman -Syu
+    echo "removing dependencies"
+    pacman -Sc
 fi
 echo "System up to date"
