@@ -64,7 +64,7 @@ EOF
     [Timer]
     OnCalendar=daily
     Persistent=true
-    RandomizedDelaySec=30m
+    RandomizedDelaySec=5m
 
     [Install]
     WantedBy=timers.target
